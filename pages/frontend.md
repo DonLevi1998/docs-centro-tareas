@@ -164,26 +164,29 @@ interface Tarea {
 
 El componente `ColumnaBoardComponent` se comunica con múltiples endpoints del backend REST para realizar operaciones CRUD y consultar roles o permisos. A continuación, se resumen las rutas utilizadas y su funcionalidad:
 
-| Método | Endpoint                                                                 | Propósito                                                  |
+| Método | Endpoint | Propósito |
 |--------|--------------------------------------------------------------------------|------------------------------------------------------------|
-| `GET`  | `/tableros/usuario/{usuarioId}`                                          | Obtener los tableros a los que el usuario tiene acceso.   |
-| `GET`  | `/roles/tableros/{tableroId}/usuarios/{usuarioId}/mi-rol`               | Obtener el rol del usuario dentro del tablero.            |
-| `GET`  | `/columnas/tablero/{tableroId}`                                          | Listar columnas del tablero actual.                       |
-| `GET`  | `/tareas/columna/{columnaId}`                                           | Obtener tareas asociadas a una columna específica.        |
-| `POST` | `/columnas`                                                             | Crear una nueva columna.                                  |
-| `PUT`  | `/columnas/{columnaId}/renombrar`                                       | Actualizar el nombre de una columna.                      |
-| `PUT`  | `/columnas/orden`                                                       | Actualizar el orden de todas las columnas.                |
-| `DELETE` | `/columnas/eliminar/{columnaId}`                                      | Eliminar una columna del tablero.                         |
-| `PUT`  | `/tableros/{tableroId}/renombrar`                                       | Renombrar el tablero actual.                              |
-| `GET`  | `/tableros/{tableroId}/miembros`                                        | Obtener todos los miembros (creador, colaboradores, veedores). |
-| `PUT`  | `/tareas/{tareaId}/mover`                                               | Mover una tarea a otra columna y cambiar su orden.        |
+| `GET` | `/tableros/usuario/{usuarioId}` | Obtener los tableros a los que el usuario tiene acceso. |
+| `GET` | `/roles/tableros/{tableroId}/usuarios/{usuarioId}/mi-rol` | Obtener el rol del usuario dentro del tablero. |
+| `GET` | `/columnas/tablero/{tableroId}` | Listar columnas del tablero actual. |
+| `GET` | `/tareas/columna/{columnaId}` | Obtener tareas asociadas a una columna específica. |
+| `POST` | `/columnas` | Crear una nueva columna. |
+| `PUT` | `/columnas/{columnaId}/renombrar` | Actualizar el nombre de una columna. |
+| `PUT` | `/columnas/orden` | Actualizar el orden de todas las columnas. |
+| `DELETE` | `/columnas/eliminar/{columnaId}` | Eliminar una columna del tablero. |
+| `PUT` | `/tableros/{tableroId}/renombrar` | Renombrar el tablero actual. |
+| `GET` | `/tableros/{tableroId}/miembros` | Obtener todos los miembros (creador, colaboradores, veedores). |
+| `PUT` | `/tareas/{tareaId}/mover` | Mover una tarea a otra columna y cambiar su orden. |
 
 ##### Roles y permisos de usuario
 
 El sistema contempla tres tipos de roles dentro de cada tablero:
-- **Creador (`esCreador`)**: Tiene todos los permisos habilitados: puede editar el nombre del tablero, agregar/eliminar columnas, mover tareas y gestionar miembros.
-- **Colaborador (`esColaborador`)**: Puede agregar columnas y tareas, mover tareas y cambiar nombres, pero no puede invitar a otros usuarios ni renombrar el tablero.
-- **Veedor (`esVeedor`)**: Tiene acceso de solo lectura. No puede realizar acciones modificables.
+- **Creador (`esCreador`)**  
+  Tiene todos los permisos habilitados: puede editar el nombre del tablero, agregar/eliminar columnas, mover tareas y gestionar miembros.
+- **Colaborador (`esColaborador`)**  
+  Puede agregar columnas y tareas, mover tareas y cambiar nombres, pero no puede invitar a otros usuarios ni renombrar el tablero.
+- **Veedor (`esVeedor`)**  
+  Tiene acceso de solo lectura. No puede realizar acciones modificables.
 
 La determinación del rol se realiza al consultar el endpoint de roles por usuario y tablero:
 ```ts
@@ -197,21 +200,161 @@ this.esVeedor = rol.rol === 0;
 ```
 
 ##### Funciones clave del componente
-- **obtenerColumnas()**: Consulta al backend las columnas del tablero. Si no existen, llama a `crearColumnaInicial()`.
-- **crearColumnaInicial()**: Crea tres columnas base: `Por hacer`, `En proceso` y `Completado`.
-- **agregarColumna()**: Agrega una nueva columna al final del tablero actual.
-- **renombrarColumna(columna)** y **confirmarRenombre(columna)**: Permiten editar y guardar el nuevo nombre de una columna.
-- **eliminarColumna(columnaId)**: Elimina la columna seleccionada tras confirmar vía un cuadro de diálogo (`ConfirmationService`).
-- **onDrop(event)**: Permite cambiar el orden de las columnas usando `CdkDragDrop`. Envía los nuevos índices al backend para persistencia.
-- **moverTarea(evento)**: Se ejecuta cuando una tarea cambia de columna. Actualiza localmente la UI y sincroniza el cambio con el backend.
-- **abrirModalAgregarTarea(columnaId)** y **cerrarModalTarea()**: Controlan la apertura y cierre del modal de creación de tareas. Tras cerrarse, se refrescan las columnas.
-- **abrirModalDetalleTarea(tareaId)** y **cerrarModalDetalleTarea()**: Gestionan la visualización del detalle de una tarea específica. Al cerrar, se refresca la columna correspondiente.
+A continuación se detallan las funciones centrales que gestionan las interacciones de columnas y tareas:
+- **obtenerColumnas()**  
+  Consulta al backend las columnas del tablero. Si no existen, llama a `crearColumnaInicial()`.
+- **crearColumnaInicial()**  
+  Crea tres columnas base: `Por hacer`, `En proceso` y `Completado`.
+- **agregarColumna()**  
+  Agrega una nueva columna al final del tablero actual.
+- **renombrarColumna(columna)** y **confirmarRenombre(columna)**  
+  Permiten editar y guardar el nuevo nombre de una columna.
+- **eliminarColumna(columnaId)**  
+  Elimina la columna seleccionada tras confirmar vía un cuadro de diálogo (`ConfirmationService`).
+- **onDrop(event)**  
+  Permite cambiar el orden de las columnas usando `CdkDragDrop`. Envía los nuevos índices al backend para persistencia.
+- **moverTarea(evento)**  
+  Se ejecuta cuando una tarea cambia de columna. Actualiza localmente la UI y sincroniza el cambio con el backend.
+- **abrirModalAgregarTarea(columnaId)** y **cerrarModalTarea()**  
+  Controlan la apertura y cierre del modal de creación de tareas. Tras cerrarse, se refrescan las columnas.
+- **abrirModalDetalleTarea(tareaId)** y **cerrarModalDetalleTarea()**  
+  Gestionan la visualización del detalle de una tarea específica. Al cerrar, se refresca la columna correspondiente.
 
 ##### Integraciones
 - **PrimeNG** para diálogos y mensajes.
 - **Angular CDK** para drag-and-drop.
 - **HttpClient** para conexión con backend.
 - **Servicios propios** como `empresaActivaService`.
+
+---
+
+### Módulo de Comentarios
+
+Gestión de comentarios dentro de las tareas para mantener trazabilidad y comunicación.
+
+#### Componentes
+- `comentarios-tarea.component.ts`: Lista y gestiona los comentarios relacionados a una tarea.
+
+#### Funcionalidades
+- Añadir, editar o eliminar comentarios propios.
+- Listado cronológico.
+- Asociación con usuarios invitados (colaboradores y veedores).
+
+---
+
+### Módulo de Etiquetas
+
+Permite etiquetar tareas con categorías personalizadas por tablero.
+
+#### Componentes
+- `selector-etiquetas/`
+- Permite seleccionar, crear o eliminar etiquetas asociadas a una tarea.
+
+#### Funcionalidades
+- Visualización de etiquetas como "hashtags".
+- Asignación rápida desde el modal de tarea.
+- Gestión de colores por etiqueta.
+
+---
+
+### Módulo de Invitaciones
+
+Permite invitar nuevos usuarios a los tableros como colaboradores o veedores.
+
+#### Componentes
+- `invitacion-dialog.component.ts`: Modal de invitación.
+- `invitar-usuario.dto.ts`: Define el DTO de invitación.
+
+#### Funcionalidades
+- Envío de invitaciones.
+- Rol de participante.
+- Comunicación con el backend para registrar nuevas participaciones.
+
+---
+
+### Módulo de Login
+
+Sistema de autenticación de usuarios con formulario de acceso.
+
+#### Archivos
+- `login.component.ts/html`: Vista y lógica del formulario de inicio de sesión.
+- `auth.service.ts`: Servicio encargado de comunicarse con el backend y almacenar sesión.
+
+#### Funcionalidades
+- Validación de usuario y contraseña.
+- Llamada al endpoint `/api/usuarios/login`.
+- Almacenamiento en `localStorage` o `sessionStorage`.
+
+---
+
+### Gestión de tareas
+
+El sistema de tareas permite a los usuarios crear, visualizar y consultar detalles de actividades dentro de cada columna del tablero. Este módulo está dividido en tres componentes principales.
+
+#### Estructura
+Ubicación: `src/app/tableros/columnas/`
+- `tarea-card/`: Vista general de tareas en la columna.
+- `crear-tarea-modal/`: Modal emergente para registrar nuevas tareas.
+- `detalle-tarea-modal/`: Modal de detalle que muestra información extendida.
+
+#### tarea-card
+Componente que representa visualmente una tarea dentro de la columna.
+- **Ubicación**: `tableros/columnas/tarea-card/`
+- **Contenido visible**:
+  - Título de la tarea
+  - Icono o color que representa prioridad
+  - Estado (completado o no), editable si no es veedor
+- **Interacciones**:
+  - Al hacer clic, se abre el `detalle-tarea-modal`.
+  - Se permite marcar como completada o eliminar si no se es veedor.
+- **Responsabilidad**: Presentar de forma concisa las tareas existentes en cada columna.
+
+#### crear-tarea-modal
+Componente tipo modal que aparece tras presionar el botón **"Añadir Tarea"**.
+- **Ubicación**: `tableros/columnas/crear-tarea-modal/`
+- **Campos del formulario**:
+  - `Título` (obligatorio)
+  - `Descripción`
+  - `Fecha inicio` y `Fecha fin`
+  - `Responsable`: Solo los usuarios con rol de _colaborador_
+  - `Etiquetas`: Selección múltiple (opcional)
+  - `Prioridad`: Selector de tipo `p-dropdown` con tres niveles `Bajo`, `Medio`, `Alto`)
+- **Validaciones**:
+  - El título y el responsable son requeridos.
+  - No se permite elegir un veedor como responsable.
+- **Al guardar**:
+  - Se realiza una solicitud al backend para crear la tarea.
+  - Se actualiza dinámicamente la columna sin recargar toda la vista.
+  - El modal se cierra automáticamente tras guardar exitosamente.
+
+#### detalle-tarea-modal
+Muestra la información completa de una tarea en un modal expandido.
+- **Ubicación**: `tableros/columnas/detalle-tarea-modal/`
+- **Contenido**:
+  - Título y descripción (modo solo lectura o editable)
+  - Responsable asignado
+  - Etiquetas con estilo de hashtags (rellenados con su color)
+  - Fechas
+  - Comentarios (módulo aparte)
+  - Adjuntos (módulo de archivos)
+- **Restricciones**:
+  - Solo los colaboradores pueden editar tareas.
+  - Veedores solo pueden comentar y visualizar.
+
+#### Flujo de creación de tareas
+1. El usuario hace clic en el botón **"Añadir Tarea"** al final de la columna.
+2. Se despliega el componente `crear-tarea-modal`.
+3. El usuario llena el formulario y presiona **Guardar**.
+4. La tarea se crea en el backend.
+5. Se actualiza la vista del componente `columna-board` para mostrar la nueva tarea.
+6. El modal se cierra automáticamente.
+
+#### Consideraciones
+- Las tareas se agrupan y ordenan por columna.
+- Se planea agregar funcionalidades de arrastrar y soltar (`drag & drop`) en futuras versiones.
+- Los módulos de comentarios y archivos adjuntos están desacoplados y se documentan por separado.
+
+---
 
 ### usuarios/
 - **crear-usuario.component.ts**: Lógica y métodos para crear usuarios.
