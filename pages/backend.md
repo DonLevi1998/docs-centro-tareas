@@ -11,13 +11,27 @@ El backend expone una API RESTful para la gestión de usuarios, tableros, column
 
 ## Instalación y ejecución
 1. Configura la cadena de conexión a la base de datos en [`appsettings.json`](/pages/despliegue.md#configuración-de-la-cadena-de-conexión-appsettingsjson).
-2. Ejecuta las migraciones si es necesario.
-3. Inicia el backend:
-   ```bash
-   dotnet run
+2. Acceda a backend-tareas
+ ```bash
+    cd backend-tareas
    ```
+3. Despues ejecute el comando para actualizar las migraciones a su base de datos seleccionada
+ ```bash
+   dotnet ef database update
+   ```
+3. En caso de no tener migraciones en el fichero backend-tareas/Migrations, cree una nueva migracion con el comando:
+ ```bash
+   dotnet ef migrations add NombreDeLaMigracion
+   ```
+Despues vuelva a ejecutar el comando del paso 2.
 
-## Endpoints principales
+4. Inicia el backend:
+```bash
+   dotnet run
+  ```
+
+
+# Endpoints principales
 - /api/Tablero
 - /api/Tareas
 - /api/Usuario
@@ -1097,5 +1111,215 @@ http://localhost:5080/api/usuarios/logout
 
 **Descripción:**
 Cierra la sesión del usuario y elimina el token de la base de datos.
+
+---
+
+##  DTOs
+
+A continuación se describen los principales DTO (Data Transfer Object) utilizados en el sistema, con su estructura, campos y propósito:
+
+---
+
+### UsuarioLoginDTO
+
+```csharp
+public class UsuarioLoginDTO
+{
+    public required string Correo { get; set; } // Email del usuario
+    public required string Password { get; set; } // Contraseña
+}
+```
+**Descripción:**
+Se utiliza para el login de usuarios. Requiere correo electrónico y contraseña.
+
+---
+
+### UsuarioCreateDTO
+
+```csharp
+public class UsuarioCreateDTO
+{
+    public required string Nombre { get; set; }
+    public required string Correo { get; set; }
+    public required string Telefono { get; set; }
+    public required string Password { get; set; }
+}
+```
+**Descripción:**
+Se utiliza para crear un nuevo usuario. Incluye nombre, correo, teléfono y contraseña.
+
+---
+
+### UsuarioDTO
+
+```csharp
+public class UsuarioDTO
+{
+    public required int Id { get; set; }
+    public required string Nombre { get; set; }
+    public required string Correo { get; set; }
+    public required string Telefono { get; set; }
+}
+```
+**Descripción:**
+Representa los datos básicos de un usuario en el sistema.
+
+---
+
+### TareaDTO
+
+```csharp
+public class TareaDTO
+{
+    public int Id { get; set; }
+    public string Nombre { get; set; }
+    public string Descripcion { get; set; }
+    public bool Estado { get; set; }
+    public DateTime? FechaInicio { get; set; }
+    public DateTime? FechaFin { get; set; }
+    public DateTime? FechaNotificacion { get; set; }
+    public int Orden { get; set; }
+    public int? UsuarioAsignadoId { get; set; }
+    public string? UsuarioAsignadoNombre { get; set; }
+    public List<EtiquetaDTO> Etiquetas { get; set; }
+    public int TableroId { get; set; }
+    public PrioridadTarea Prioridad { get; set; }
+}
+```
+**Descripción:**
+Representa una tarea, con información de estado, fechas, responsable, etiquetas y prioridad.
+
+---
+
+### TareaCreateDTO
+
+```csharp
+public class TareaCreateDTO
+{
+    public int ColumnaId { get; set; }
+    public string Nombre { get; set; }
+    public string Descripcion { get; set; }
+    public DateTime? FechaInicio { get; set; }
+    public DateTime? FechaFin { get; set; }
+    public DateTime? FechaNotificacion { get; set; }
+    public int Orden { get; set; }
+    public PrioridadTarea Prioridad { get; set; }
+    public int? UsuarioAsignadoId { get; set; }
+    public int? UsuarioActualId { get; set; }
+    public string? UsuarioActualNombre { get; set; }
+    public List<int>? Etiquetas { get; set; }
+    public List<int>? Archivos { get; set; }
+    public List<string>? Comentarios { get; set; }
+}
+```
+**Descripción:**
+Se utiliza para crear una nueva tarea, permitiendo asociar responsable, etiquetas, archivos y comentarios.
+
+---
+
+### TableroDTO
+
+```csharp
+public class TableroDTO
+{
+    public int Id { get; set; }
+    public string Nombre { get; set; }
+    public DateTime FechaCreacion { get; set; }
+    public int CreadorId { get; set; }
+}
+```
+**Descripción:**
+Representa los datos de un tablero (board) en el sistema.
+
+---
+
+### ColumnaDTO
+
+```csharp
+public class ColumnaDTO
+{
+    public int Id { get; set; }
+    public string Nombre { get; set; }
+    public int Orden { get; set; }
+    public List<TareaDTO> Tareas { get; set; }
+}
+```
+**Descripción:**
+Representa una columna dentro de un tablero, incluyendo la lista de tareas asociadas.
+
+---
+
+### ColumnaCreateDTO
+
+```csharp
+public class ColumnaCreateDTO
+{
+    public int TableroId { get; set; }
+    public string Nombre { get; set; }
+    public int Orden { get; set; }
+}
+```
+**Descripción:**
+Se utiliza para crear una nueva columna en un tablero.
+
+---
+
+### EtiquetaDTO
+
+```csharp
+public class EtiquetaDTO
+{
+    public int Id { get; set; }
+    public string Nombre { get; set; }
+    public string Color { get; set; }
+}
+```
+**Descripción:**
+Representa una etiqueta (label) asociada a tareas o tableros.
+
+---
+
+### EtiquetaCreateDTO
+
+```csharp
+public class EtiquetaCreateDTO
+{
+    public int TableroId { get; set; }
+    public string Nombre { get; set; }
+    public string Color { get; set; }
+}
+```
+**Descripción:**
+Se utiliza para crear una nueva etiqueta en un tablero.
+
+---
+
+### TareaComentarioDTO
+
+```csharp
+public class TareaComentarioDTO
+{
+    public int Id { get; set; }
+    public int UsuarioId { get; set; }
+    public string UsuarioNombre { get; set; }
+    public string Contenido { get; set; }
+}
+```
+**Descripción:**
+Representa un comentario realizado por un usuario en una tarea.
+
+---
+
+### EmpresaDTO
+
+```csharp
+public class EmpresaDTO
+{
+    public int Id { get; set; }
+    public string Nombre { get; set; }
+}
+```
+**Descripción:**
+Representa una empresa dentro del sistema.
 
 ---

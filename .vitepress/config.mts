@@ -16,7 +16,7 @@ export default defineConfig({
       { text: 'Backend', link: '/pages/backend' },
       { text: 'Frontend', link: '/pages/frontend' },
       { text: 'Despliegue', link: '/pages/despliegue' },
-      { text: 'FAQ', link: '/pages/faq' }
+      
     ],
     sidebar: {
       '/pages/': [
@@ -25,7 +25,7 @@ export default defineConfig({
         { text: 'Backend', link: '/pages/backend.md' },
         { text: 'Frontend', link: '/pages/frontend.md' },
         { text: 'Despliegue', link: '/pages/despliegue.md' },
-        { text: 'FAQ', link: '/pages/faq.md' }
+        
       ]
     },
   },

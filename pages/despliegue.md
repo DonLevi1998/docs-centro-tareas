@@ -2,7 +2,7 @@
 
 Esta sección describe los pasos necesarios para preparar y ejecutar el entorno de desarrollo de sakai-tareas, incluyendo la base de datos, configuración y servicios auxiliares.
 
-## 1. Creación y migración de la base de datos (Entity Framework 8)
+## 1. Creación y migración de la base de datos (EF 8.0)
 
 El backend utiliza Entity Framework 8 con el enfoque Code First para la gestión de la base de datos. Si es la primera vez que instalas el sistema o no tienes la base de datos creada, sigue estos pasos:
 
@@ -49,4 +49,4 @@ Esto expondrá Mailpit en los puertos 1025 (SMTP) y 8025 (web UI). Accede a la i
 
 ---
 
-Sigue estos pasos para asegurar que tu entorno de desarrollo esté correctamente configurado y funcional.
+Sigue estos pasos para asegurar que tu entorno de desarrollo esté correctamente configurado y funcional, tomar en cuenta tanto el backend como el frontend deben estar correctamente levantados y funcionando para el correcto flujo del sistema
