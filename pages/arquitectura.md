@@ -46,7 +46,6 @@ sakai-tareas/
   - **Migrations/**: Migraciones de base de datos generadas por Entity Framework.
   - **Models/**: Modelos adicionales usados en la lógica de negocio.
   - **Services/**: Servicios auxiliares como envío de correos, manejo de archivos y notificaciones.
-  - **Views/**: Vistas (si aplica).
   - **wwwroot/**: Archivos estáticos del backend.
   - **appsettings.json**: Archivo de configuración principal del backend.
 - **frontend-tareas/**: Contiene el frontend de la aplicación, desarrollado en Angular. Aquí se encuentra la interfaz de usuario y la lógica de presentación.
@@ -59,12 +58,9 @@ sakai-tareas/
     - **etiquetas/**: Gestión de etiquetas para tareas/tableros.
     - **layout/**: Componentes de layout, navegación y estructura visual.
     - **demo/**: Ejemplos o pruebas de componentes.
-    - **...**: Otros módulos/componentes adicionales.
   - **src/assets/**: Recursos estáticos como imágenes y estilos.
   - **src/environments/**: Configuraciones de entorno para Angular.
   - **angular.json**: Configuración del proyecto Angular.
-- **sakai-tareas.sln**: Archivo de solución de Visual Studio que agrupa los proyectos del backend y frontend.
-
 ---
 
 Esta estructura permite una separación clara entre el backend y el frontend, facilitando el desarrollo, mantenimiento y escalabilidad del sistema.
