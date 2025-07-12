@@ -5,7 +5,7 @@ El backend expone una API RESTful para la gestión de usuarios, tableros, column
 
 ## Estructura principal
 - **Controllers**: Gestionan las rutas y lógica de cada recurso (Tablero, Tarea, Usuario, etc.)
-- **Entities/Models**: Representan las tablas y objetos de dominio.
+- **Entities**: Representan las tablas y objetos de dominio.
 - **Services**: Lógica de negocio y utilidades (notificaciones, emails, archivos).
 - **Middleware**: Validación de tokens y seguridad.
 

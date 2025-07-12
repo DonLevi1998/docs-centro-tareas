@@ -1,7 +1,7 @@
 ---
 layout: home
 hero:
-  name: 'Centro de Documentación'
+  name: 'Documentación'
   text: 'Sakai Tareas'
   tagline: Plataforma de gestión de tareas.
   actions:

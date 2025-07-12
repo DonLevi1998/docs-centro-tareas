@@ -2,7 +2,7 @@ import { defineConfig } from 'vitepress';
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   description: 'Documentación técnica de sakai-tareas',
-  title: 'Centro de Documentación - Sakai Tareas',
+  title: 'Documentación - Sakai Tareas',
   themeConfig: {
     search: {
       provider: 'local',
