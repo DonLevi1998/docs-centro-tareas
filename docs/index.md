@@ -5,7 +5,7 @@ layout: home
 hero:
   name: 'Documentación'
   text: 'SAKAI-TAREAS'
-  tagline: Plataforma de gestión de tareas tipo Trello.
+  tagline: Plataforma de gestión de tareas.
   actions:
     - theme: brand
       text: Empezar
