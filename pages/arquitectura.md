@@ -63,4 +63,26 @@ sakai-tareas/
   - **angular.json**: Configuración del proyecto Angular.
 ---
 
+```mermaid
+
+flowchart TD
+    Usuario[" Usuario autenticado"] --> UI[" Frontend Angular"]
+
+    subgraph Frontend
+        UI --> TablerosComponent[" TablerosComponent"]
+        UI --> ColumnasComponent[" ColumnasComponent"]
+        UI --> TareasComponent[" TareasComponent"]
+        UI --> EtiquetasComponent[" EtiquetasComponent"]
+        UI --> API[" API Backend"]
+    end
+
+    subgraph Backend
+        API --> ControladorTareas[" ControladorTareas"]
+        API --> ControladorColumnas[" ControladorColumnas"]
+        API --> ControladorEtiquetas["️ ControladorEtiquetas"]
+        API --> ControladorUsuarios[" ControladorUsuarios"]
+        API --> DB[" PostgreSQL"]
+    end
+```
+
 Esta estructura permite una separación clara entre el backend y el frontend, facilitando el desarrollo, mantenimiento y escalabilidad del sistema.
