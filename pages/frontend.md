@@ -104,7 +104,8 @@ A continuación se describe cada módulo funcional y los archivos clave que lo c
   - **detalle-tarea-modal/**: Modal de detalle de tarea.
   - **tarea-card/**: Componente visual de tarjeta de tarea, incluye carga de archivos.
 
-#### Detalle: ColumnaBoardComponent
+#### Columnas/
+
 
 ##### Ubicación
 `src/app/tableros/columnas/columna-board/columna-board.component.ts`
@@ -246,9 +247,11 @@ Gestión de comentarios dentro de las tareas para mantener trazabilidad y comuni
 
 Permite etiquetar tareas con categorías personalizadas por tablero.
 
-#### Componentes
-- `selector-etiquetas/`
-- Permite seleccionar, crear o eliminar etiquetas asociadas a una tarea.
+#### Componentes y servicios involucrados
+- `SelectorEtiquetasComponent`: componente visual que permite seleccionar, crear, editar y eliminar etiquetas asociadas a un tablero.
+- `EtiquetasService`: servicio que gestiona todas las operaciones HTTP con el backend.
+- `Etiqueta`: interfaz que representa el modelo de datos de una etiqueta `{ id, nombre, color }`.
+
 
 #### Funcionalidades
 - Visualización de etiquetas como "hashtags".
@@ -265,10 +268,87 @@ Permite invitar nuevos usuarios a los tableros como colaboradores o veedores.
 - `invitacion-dialog.component.ts`: Modal de invitación.
 - `invitar-usuario.dto.ts`: Define el DTO de invitación.
 
-#### Funcionalidades
-- Envío de invitaciones.
-- Rol de participante.
-- Comunicación con el backend para registrar nuevas participaciones.
+#### Funcionalidades principales
+
+**Visualización y selección**
+
+- Listado de todas las etiquetas disponibles en un tablero.
+- Las etiquetas ya asignadas a la tarea aparecen marcadas.
+- Soporte visual para ver el color y nombre de cada etiqueta.
+
+
+**Crear etiqueta**
+
+- Se puede crear una nueva etiqueta proporcionando nombre y color.
+- Se usa `etiquetasService.crearEtiqueta()` para persistir la etiqueta.
+
+**Editar etiqueta**
+
+- Se puede modificar el nombre y color de una etiqueta existente.
+- Cambios enviados al backend con `actualizarEtiqueta()`.
+
+**Eliminar etiqueta**
+- Se utiliza una confirmación de Primeng (`ConfirmationService`) antes de eliminar.
+- Al eliminar una etiqueta también se remueve de la tarea si estaba seleccionada.
+
+**Asignar/desasignar etiquetas**
+
+- Las etiquetas se asignan o eliminan directamente desde la tarea en tiempo real.
+- Se maneja con `asignarEtiqueta()` y `eliminarEtiquetaDeTarea()`.
+
+**Modo standalone**
+
+- El componente puede funcionar de forma autónoma al crear una tarea nueva, sin requerir que esta ya exista.
+- En este modo, se habilita un botón **Guardar cambios** que emite los IDs de etiquetas seleccionadas.
+
+
+ **Eventos emitidos**
+
+El componente emite varios eventos hacia el componente padre:
+
+| Evento | Descripción |
+|--------|-------------|
+| `etiquetasActualizadas` | Devuelve el array actualizado de IDs de etiquetas seleccionadas |
+| `etiquetasGuardadas`    | Se emite cuando se guardan todos los cambios de etiquetas (modo standalone) |
+| `etiquetaCreada`        | Devuelve el objeto de la nueva etiqueta creada |
+| `actualizar`            | Emite una señal para que el componente padre refresque los datos (por ejemplo, tareas o etiquetas) |
+
+---
+
+**Servicios utilizados**
+
+`EtiquetasService` incluye los siguientes métodos:
+
+- `obtenerEtiquetas`(tableroId: number)
+- `crearEtiqueta`(tableroId: number, nombre: string, color: string)
+- `actualizarEtiqueta`(id: number, nombre: string, color: string)
+- `eliminarEtiqueta`(id: number)
+- `asignarEtiqueta`(tareaId: number, etiquetaId: number)
+- `eliminarEtiquetaDeTarea`(tareaId: number, etiquetaId: number)
+- `desasignarEtiqueta`(tareaId: number, etiquetaId: number)
+
+---
+
+**Consideraciones**
+
+- Las etiquetas se cargan por `tableroId` al inicializar el componente (`ngOnInit`).
+- El contraste del color de texto se calcula automáticamente con `getContrastColor()`.
+- El componente es reutilizable tanto para tareas existentes como para nuevas (modo crear).
+
+---
+
+**Ejemplo de uso**
+
+```html
+<app-selector-etiquetas
+  [tableroId]="idTablero"
+  [tareaId]="idTarea"
+  [etiquetasIniciales]="tarea.etiquetas"
+  [modoStandalone]="false"
+  (etiquetasActualizadas)="actualizarEtiquetas($event)"
+  (etiquetasGuardadas)="cerrarModal()"
+></app-selector-etiquetas>
+```
 
 ---
 
